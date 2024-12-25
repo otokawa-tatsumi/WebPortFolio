@@ -233,6 +233,7 @@ li:hover::before {
     display: flex;
     align-items: center;
     justify-content: center;
+    border: 1px solid #aaaaaa;
 }
 
 .index div{
@@ -614,6 +615,13 @@ hr {
     content: '\f005';
     font-weight: 900;
     font-size: 25px;
+}
+
+.fa-magnifying-glass:before{
+    font-family: "Font Awesome 5 Free";
+    content: '\f002';
+    font-weight: 900;
+    font-size: 15px;
 }
 
 i{

@@ -23,17 +23,40 @@
         </div>
         
         <div style="width: 100%; height: 100%;">
-            <div style="overflow: auto; height: calc(100vh - 50px); width: 100%; margin: 0 auto; background-color: #eeeeee;">
+            <div style="overflow: auto; height: 100vh; width: 100%; margin: 0 auto; background-color: #eeeeee;">
                 <input type="hidden" id="infomails" data-infomails="<%= @infomails.to_json %>">
-                <p style="text-align: center; font-size: 20px; border-bottom: 1px solid; margin: 0; padding-top: 10px; padding-bottom: 10px; width: 100%; background-color: #cccccc;">お問い合わせ一覧</p>
-
+                <div style="border-bottom: 1px solid; margin: 0; padding-top: 10px; padding-bottom: 10px; width: 100%; background-color: #cccccc;">
+                    <span style="font-size: 20px; margin-left: 10px;">お問い合わせメール一覧</span>
+                        <span style="background-color: #1f1f1f; color: white; width: fit-content; padding: 5px; cursor: pointer; margin-left: 10px; font-size: 14px; white-space: nowrap;">
+                            <a onclick="ConditionActive(this)">▶検索</a>
+                        </span>
+                    <div id="search-condition" style="display: none;">
+                        <%= form_with url: admin_search_path, local: true, method: :get do |f| %>
+                            <div>
+                                <div style="margin-left: 10px;">●キーワード</div>
+                                <div style="margin-left: 10px;">
+                                    <%= f.search_field :word, value: @word, placeholder: "検索", class: "search-input", style: "padding: 2px;" %>
+                                </div>
+                            </div>
+                            <div>
+                                <div style="margin-left: 10px;">●受信日時</div>
+                                <div style="margin-left: 10px;">
+                                    <%= f.date_field :start_date, value: @start_date %> ～ <%= f.date_field :end_date, value: @end_date %>
+                                </div>
+                            </div>
+                            <div style="margin-left: 10px; margin-top: 10px;">
+                                <%= f.submit "検索", class: "" %>
+                            </div>
+                        <% end %>
+                    </div>
+                </div>
                 <% @infomails.each do |infomail| %>
-                    <div class="message" value="<%= infomail.id %>" style="width: 100%;">
-                        <a onclick="MessageActive(this)"><p style="padding: 5px; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><%= infomail.mail_address %></p></a>
-                        <a onclick="MessageActive(this)"><p style="padding: 5px; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><%= infomail.sender %></p></a>
-                        <a onclick="MessageActive(this)"><p style="padding: 5px; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><%= infomail.message %></p></a>
+                    <div class="message" style="width: 100%;" value="<%= infomail.id %>">
+                        <a class="ajax-button"><p style="padding: 5px; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">名前：<%= infomail.sender %></p></a>
+                        <a class="ajax-button"><p style="padding: 5px; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">メールアドレス：<%= infomail.mail_address %></p></a>
+                        <!--<a class="ajax-button"><p style="padding: 5px; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">本文：<%= infomail.message %></p></a>-->
                         <div style="position: relative;">
-                            <a onclick="MessageActive(this)">
+                            <a class="ajax-button">
                                 <p style="padding: 5px; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><%= l infomail.created_at %></p>
                             </a>
                             <div style="position: absolute; right: 10px; z-index: 1; top: 0;">
@@ -47,23 +70,32 @@
                     </div>
                 <% end %>
             </div>
-
-            <div class="message-detail" id="message-detail" style="background-color: white;">
-                <div style="margin: 0 auto; height: 100%;">
-                    <div style="padding: 10px; margin-right: 10px;">
+            
+            <div class="message-detail" id="message-detail">
+                <div style="margin: 0 auto; height: 100%; max-width: 600px; background-color: white;">
+                    <div style="padding-top: 10px; margin-right: 10px;">
                         <div style="text-align: right;"><a href="javascript:MessageInactive();"><i class="fa-solid fa-xmark"></i></a></div>
                     </div>
                     <hr>
                     <div style="padding: 10px;">
-                        <p id="detail-mail-address" style="word-break: break-all;"></p>
-                        <p id="detail-sender" style="word-break: break-all;"></p>
-                        <p id="detail-date" style="word-break: break-all;"></p>
+                        <p id="detail-sender" style="word-break: break-all;">
+                            <% if @infomail %><%= JSON.load(@infomail)[1]["sender"] %><% end %>
+                        </p>
+                        <p id="detail-mail-address" style="word-break: break-all;">
+                            <% if @infomail %><%= JSON.load(@infomail)[1]["mail_address"] %><% end %>
+                        </p>
+                        <p id="detail-date" style="word-break: break-all;">
+                            <% if @infomail %><%= JSON.load(@infomail)[1]["created_at"] %><% end %>
+                        </p>
                     </div>
                     <hr>
                     <div style="padding: 10px;">
-                        <p id="detail-message" style="word-break: break-all;"></p>
+                        <p id="detail-message" style="word-break: break-all;">
+                            <% if @infomail %><%= JSON.load(@infomail)[1]["created_at"] %><% end %>
+                        </p>
                     </div>
                 </div>
+                <a href="javascript:MessageInactive();"><div style="background-color: black; height: 100%; width: 100%; opacity: 0.5; position: absolute; top: 0; z-index: -1;"></div></a>
             </div>
         </div>
 
@@ -75,26 +107,48 @@
                 target.classList.remove("message-detail-active");
             }
 
-            function MessageActive(element) {
-                var mails = document.getElementById("infomails").dataset.infomails;
-                var id = element.closest(".message").getAttribute("value");
-                var mail = JSON.parse(mails).find(mail => mail.id == id);
-
-                var sender = document.getElementById("detail-sender");
-                var mail_address = document.getElementById("detail-mail-address");
-                var date = document.getElementById("detail-date");
-                var message = document.getElementById("detail-message");
-
-                sender.innerHTML = "名前：" + mail.sender;
-                mail_address.innerHTML = "メールアドレス：" + mail.mail_address;
-
-                var d = mail.created_at.substring(0,19).replace("T", " ");
-                date.innerHTML = d;
-                message.innerHTML = mail.message;
-
-                var target = document.getElementById("message-detail");
-                target.classList.add("message-detail-active");
+            //CSRFトークンを取得
+            const getCsrfToken = () => {
+                const metas = document.getElementsByTagName('meta');
+                for (let meta of metas) {
+                    if (meta.getAttribute('name') === 'csrf-token') {
+                        return meta.getAttribute('content');
+                    }
+                }
+                return '';
             }
+            
+            //メールを開く
+            document.addEventListener('DOMContentLoaded', () => {
+                var buttons = document.getElementsByClassName("ajax-button");
+                Array.from(buttons).forEach((button) => {
+                    button.addEventListener('click', () => {
+                        var mail_id = button.closest(".message").getAttribute("value");
+                        fetch('/admin/open', {
+                            method: 'POST', 
+                            body: JSON.stringify({id: mail_id}),
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-Token': getCsrfToken()
+                            }
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log(data);
+                            document.getElementById("detail-sender").innerHTML = data.sender;
+                            document.getElementById("detail-mail-address").innerHTML = data.mail_address;
+                            var d = data.created_at.substring(0,19).replace("T", " ");
+                            document.getElementById("detail-date").innerHTML = d;
+                            document.getElementById("detail-message").innerHTML = data.message;
+                            var target = document.getElementById("message-detail");
+                            target.classList.add("message-detail-active");
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                        });
+                    });
+                });
+            });
             
             //モーダルを表示
             function DeleteModalActive(element) {
@@ -112,6 +166,17 @@
             function DeleteModalConfirm(element) {
                 var link = document.getElementById("delete_link" + delete_id).firstElementChild;
                 link.click();
+            }
+
+            function ConditionActive(element) {
+                var condition = document.getElementById("search-condition");
+                if(condition.style.display == "none"){
+                    condition.style.display = "block";
+                    element.innerHTML = "▼検索";
+                }else if(condition.style.display == "block"){
+                    condition.style.display = "none";
+                    element.innerHTML = "▶検索";
+                }
             }
       </script>
     </body>
