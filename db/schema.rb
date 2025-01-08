@@ -18,6 +18,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_12_12_131021) do
     t.string "sender"
     t.string "mail_address"
     t.string "message"
+    t.string "received_date_and_time"
     t.boolean "check_flag"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

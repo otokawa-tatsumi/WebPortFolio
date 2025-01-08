@@ -1,0 +1,55 @@
+services:
+  # DB
+  db:
+    image: postgres:16.2
+    container_name: web-portfolio-db-dev
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - volume_postgres:/var/lib/postgresql/data
+      - ./postgres/init-scripts:/docker-entrypoint-initdb.d
+    networks:
+      - db
+
+  # DBクライアント
+  db-manager:
+    image: dpage/pgadmin4:8.4
+    container_name: web-portfolio-db-manager-dev
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@pgadmin.org
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_LISTEN_PORT: 8081
+    ports:
+      - "8081:8081"
+    depends_on:
+      - db
+    volumes:
+      - volume_pgadmin:/var/lib/pgadmin
+      - ./postgres/servers.json:/pgadmin4/servers.json
+      - ./postgres/pgpass:/pgadmin4/pgpass
+    # servers.jsonのPassFile設定用
+    # https://github.com/pgadmin-org/pgadmin4/issues/6257
+    entrypoint: >
+      /bin/sh -c "
+      mkdir -m 700 -p /var/lib/pgadmin/storage/admin_pgadmin.org;
+      cp /pgadmin4/pgpass /var/lib/pgadmin/storage/admin_pgadmin.org/;
+      chmod 600 /var/lib/pgadmin/storage/admin_pgadmin.org/pgpass;
+      /entrypoint.sh
+      "
+    networks:
+      - db
+
+networks:
+  db:
+    name: db-dev
+    driver: bridge
+
+volumes:
+  volume_postgres:
+    name: web-portfolio-vpg-dev
+  volume_pgadmin:
+    name: web-portfolio-vpga-dev
