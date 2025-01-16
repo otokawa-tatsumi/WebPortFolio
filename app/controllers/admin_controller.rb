@@ -24,27 +24,24 @@ class AdminController < ApplicationController
             @start_date = params[:start_date]
             @end_date = params[:end_date]
 
-            if @word != ""
-                if @start_date != "" && @end_date != ""
-                    @infomails = InfoMail.where("(sender LIKE ? OR mail_address LIKE ? OR message LIKE ?) AND created_at >= ? AND created_at <= ?", "%#{@word}%", "%#{@word}%", "%#{@word}%","%#{@start_date}%", "%#{@end_date}%").order(created_at: :desc)
-                elsif @start_date != "" && @end_date == ""
-                    @infomails = InfoMail.where("(sender LIKE ? OR mail_address LIKE ? OR message LIKE ?) AND created_at >= ?", "%#{@word}%", "%#{@word}%", "%#{@word}%","%#{@start_date}%").order(created_at: :desc)
-                elsif @start_date == "" && @end_date != ""
-                    @infomails = InfoMail.where("(sender LIKE ? OR mail_address LIKE ? OR message LIKE ?) AND created_at <= ?", "%#{@word}%", "%#{@word}%", "%#{@word}%", "%#{@end_date}%").order(created_at: :desc)
-                else
-                    @infomails = InfoMail.where("sender LIKE ? OR mail_address LIKE ? OR message LIKE ?", "%#{@word}%", "%#{@word}%", "%#{@word}%").order(created_at: :desc)
-                end
-            else
-                if @start_date != "" && @end_date != ""
-                    @infomails = InfoMail.where("created_at >= ? AND created_at <= ?","%#{@start_date}%", "%#{@end_date}%").order(created_at: :desc)
-                elsif @start_date != "" && @end_date == ""
-                    @infomails = InfoMail.where("created_at >= ?", "%#{@start_date}%").order(created_at: :desc)
-                elsif @start_date == "" && @end_date != ""
-                    @infomails = InfoMail.where("created_at <= ?", "%#{@end_date}%").order(created_at: :desc)
-                else
-                    @infomails = InfoMail.order(created_at: :desc)
-                end
+            query = InfoMail.all
+
+            # キーワード検索条件
+            if @word
+                query = query.where("sender LIKE :word OR mail_address LIKE :word OR message LIKE :word", word: "%#{@word}%")
             end
+
+            # 日付範囲検索条件
+            if @start_date
+                query = query.where("created_at >= ?", @start_date)
+            end
+            if @end_date
+                query = query.where("created_at <= ?", @end_date)
+            end
+
+            # 並び替えと結果の代入
+            @infomails = query.order(created_at: :desc)
+
             render :index
         else
             redirect_to new_user_session_path
