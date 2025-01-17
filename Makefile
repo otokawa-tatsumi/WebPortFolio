@@ -8,6 +8,14 @@ up-db: ## 開発用DBの起動
 down-db: ## 開発用DBの終了（DBを初期化したい場合はOPTION=-vを指定する）
 	@docker compose -f compose-dev.yaml down $(OPTION)
 
+.PHONY: build
+build: ## Dockerイメージのビルド
+	@docker build -t my-rails-app .
+
+.PHONY: run
+run: build ## アプリ起動
+	@docker run -it --rm --name my-rails-app --network host -v $$(pwd):/app my-rails-app
+
 .PHONY: status
 status: ## 起動中のサービス一覧
 	@docker compose -f compose-dev.yaml ps

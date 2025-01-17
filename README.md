@@ -1,27 +1,51 @@
-# README
+# WebPortFolio
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## ローカル開発用
+- rubyインストール
+```bash
+sudo apt update
+sudo apt install -y build-essential libssl-dev libreadline-dev zlib1g-dev
+curl -fsSL https://github.com/rbenv/rbenv-installer/raw/main/bin/rbenv-installer | bash
+echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
+echo 'eval "$(rbenv init -)"' >> ~/.bashrc
+source ~/.bashrc
 
-Things you may want to cover:
+# Ruby 3.1.4をインストールする場合
+rbenv install 3.1.4
+rbenv global 3.1.4
 
-* Ruby version
+# インストール確認
+ruby -v
+```
 
-* System dependencies
+- Node.jsインストール
+```bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
+source ~/.bashrc
 
-* Configuration
+# v23.6.0をインストールする場合
+nvm install 23.6.0
+nvm use 23.6.0
+nvm alias default 23.6.0
 
-* Database creation
+# インストール確認
+node -v
+npm -v
+```
 
-* Database initialization
+- gemインストール
+```bash
+# 必要なパッケージをインストール
+sudo apt install -y postgresql libpq-dev libyaml-dev
 
-* How to run the test suite
+# gemインストール
+bundle install --path vendor/bundle
+```
 
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+- マイグレーション
+```bash
+rails db:migrate
+```
 
 - DB起動
 ```bash
@@ -37,10 +61,5 @@ make down-db OPTION=-v
 
 - アプリ起動
 ```bash
-docker run -it --rm --name my-rails-app --network host -v $(pwd):/app my-rails-app
-```
-
-- マイグレーション実行
-```bash
-docker run -it --rm --name my-rails-app --network host -v $(pwd):/app my-rails-app bash -c "rails db:migrate"
+make run
 ```
