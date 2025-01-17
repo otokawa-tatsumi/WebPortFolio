@@ -27,15 +27,15 @@ class AdminController < ApplicationController
             query = InfoMail.all
 
             # キーワード検索条件
-            if @word
+            if @word != ""
                 query = query.where("sender LIKE :word OR mail_address LIKE :word OR message LIKE :word", word: "%#{@word}%")
             end
 
             # 日付範囲検索条件
-            if @start_date
+            if @start_date != ""
                 query = query.where("created_at >= ?", @start_date)
             end
-            if @end_date
+            if @end_date != ""
                 query = query.where("created_at <= ?", @end_date)
             end
 
