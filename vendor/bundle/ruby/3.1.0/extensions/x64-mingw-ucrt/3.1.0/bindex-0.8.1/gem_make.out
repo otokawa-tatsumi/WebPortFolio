@@ -1,0 +1,16 @@
+current directory: C:/Production/Ruby/PortFolio/vendor/bundle/ruby/3.1.0/gems/bindex-0.8.1/ext/skiptrace
+C:/Ruby31-x64/bin/ruby.exe -I C:/Ruby31-x64/lib/ruby/3.1.0 extconf.rb
+creating Makefile
+
+current directory: C:/Production/Ruby/PortFolio/vendor/bundle/ruby/3.1.0/gems/bindex-0.8.1/ext/skiptrace
+make DESTDIR\= sitearchdir\=./.gem.20240821-12140-lh4bm5 sitelibdir\=./.gem.20240821-12140-lh4bm5 clean
+
+current directory: C:/Production/Ruby/PortFolio/vendor/bundle/ruby/3.1.0/gems/bindex-0.8.1/ext/skiptrace
+make DESTDIR\= sitearchdir\=./.gem.20240821-12140-lh4bm5 sitelibdir\=./.gem.20240821-12140-lh4bm5
+generating cruby-x64-mingw-ucrt.def
+compiling cruby.c
+linking shared-object skiptrace/internal/cruby.so
+
+current directory: C:/Production/Ruby/PortFolio/vendor/bundle/ruby/3.1.0/gems/bindex-0.8.1/ext/skiptrace
+make DESTDIR\= sitearchdir\=./.gem.20240821-12140-lh4bm5 sitelibdir\=./.gem.20240821-12140-lh4bm5 install
+/usr/bin/install -c -m 0755 cruby.so ./.gem.20240821-12140-lh4bm5/skiptrace/internal
