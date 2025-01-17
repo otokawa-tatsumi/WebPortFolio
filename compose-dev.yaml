@@ -43,6 +43,22 @@ services:
     networks:
       - db
 
+  # アプリ
+  app:
+    build: .
+    container_name: web-portfolio-app-dev
+    environment:
+      RAILS_ENV: development
+    stdin_open: true
+    tty: true
+    command: bash
+    depends_on:
+      - db
+    volumes:
+      - .:/app
+    networks:
+      - db
+
 networks:
   db:
     name: db-dev

@@ -5,7 +5,6 @@ default: &default
   password: <%= ENV.fetch("PG_PASSWORD") %>
   host: <%= ENV.fetch("PG_HOST", "localhost") %>
   port: <%= ENV.fetch("PG_PORT", 5432) %>
-  host: localhost
 
 development:
   <<: *default

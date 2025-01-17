@@ -1,65 +1,30 @@
 # WebPortFolio
 
-## ローカル開発用
-- rubyインストール
-```bash
-sudo apt update
-sudo apt install -y build-essential libssl-dev libreadline-dev zlib1g-dev
-curl -fsSL https://github.com/rbenv/rbenv-installer/raw/main/bin/rbenv-installer | bash
-echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
-echo 'eval "$(rbenv init -)"' >> ~/.bashrc
-source ~/.bashrc
+## 概要
 
-# Ruby 3.1.4をインストールする場合
-rbenv install 3.1.4
-rbenv global 3.1.4
+## 機能
 
-# インストール確認
-ruby -v
-```
+## 実行手順
 
-- Node.jsインストール
-```bash
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
-source ~/.bashrc
+## 開発環境の構築と実行
+- VSCode拡張機能のインストール
+    - Dev Containers
 
-# v23.6.0をインストールする場合
-nvm install 23.6.0
-nvm use 23.6.0
-nvm alias default 23.6.0
+- VSCodeのメニューから「表示」＞「コマンドパレット」を選択
 
-# インストール確認
-node -v
-npm -v
-```
+- コマンドパレットで以下を入力し、実行
+    ```
+    Dev Containers: Reopen in Container
+    ```
 
-- gemインストール
-```bash
-# 必要なパッケージをインストール
-sudo apt install -y postgresql libpq-dev libyaml-dev
+- VSCode上でウィンドウが再読み込みされる
 
-# gemインストール
-bundle install --path vendor/bundle
-```
+- .env.exampleをコピーして.envを作成する
+    ```bash
+    cp .env.example .env
+    # .envのPG_HOSTは"localhost"ではなく"db"としていする(別コンテナでDBを実行しているため)
+    ```
 
-- マイグレーション
-```bash
-rails db:migrate
-```
+- F5キー もしくは VSCodeの左メニューの「実行とデバッグ」から実行
 
-- DB起動
-```bash
-make up-db
-```
-
-- DB終了
-```bash
-make down-db
-# DBを初期化したい場合は以下
-make down-db OPTION=-v
-```
-
-- アプリ起動
-```bash
-make run
-```
+- ブラウザから http://localhost:3000 にアクセス
